@@ -54,9 +54,52 @@
     height: 50%; 
 } */
 
-.navbar{
-  display:inline-block;
-  padding: 10px 5px;
-  text-align: left;
-
+.navbar {
+  /* display: inline-block; */
+  align-items: center;
+  width: 100%;
+  background: #000;
+  padding: 5px;
+  justify-content: center;
+  display: flex;
+  list-style: none;
+  text-align: center;
+  height: 44px;
+  margin-top: 0px;
+  margin-bottom: 74px;
 }
+.navbar li {
+  display: inline;
+  margin: 20px 20px;
+}
+.navbar li a {
+  text-decoration: none;
+  color: #fff;
+  padding: 5px 5px;
+}
+.chat{
+  text-align: center;
+  margin-top: 50px;
+}
+.chat ul li {
+  display: inline-block;
+  border: 1px solid skyblue;
+  padding: 5px;
+  width: 150px;
+  text-align: center;
+}
+.chat ul{
+  margin: 0;
+}
+.navbar2{
+  text-align: left;
+}
+.navbar3{
+  text-align: left;
+}
+.user{
+  text-align: left;
+}
+/* .nav{
+
+} */

@@ -1,46 +1,15 @@
-// // import { useEffect } from 'react';
-// import Button from "react-bootstrap/Button";
-// import Form from "react-bootstrap/Form";
-// import { useNavigate } from "react-router-dom";
-// import "../App.css";
 
-// function Login() {
-//   const navigate = useNavigate();
-
-//   return (
-//     <Form className="login">
-//       <Form.Group className="mb-3" controlId="formBasicEmail">
-//         <Form.Label>Email address &nbsp;</Form.Label>
-//         <Form.Control type="email" placeholder="Enter email" />
-//         <Form.Text className="text-muted"></Form.Text>
-//       </Form.Group>
-//       <br />
-//       <Form.Group className="mb-3" controlId="formBasicPassword">
-//         <Form.Label>Password &nbsp;</Form.Label>
-//         <Form.Control type="password" placeholder="Password" />
-//       </Form.Group>{" "}
-//       <br />
-//       <Button
-//         variant="primary"
-//         type="submit"
-//         onClick={() => {
-//           navigate("/chat");
-//         }}
-//       >
-//         Submit
-//       </Button>
-//       <br />
-//     </Form>
-//   );
-// }
-
-// 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login (){
  const navigate = useNavigate()
+ const [error, setError]=useState(false)
   const collect = async()=>{
+    if(!email || !password){
+      setError(true)
+      return false
+    }
     let result = await fetch("http://localhost:8080/loginUser",{
       method:"post",
       body:JSON.stringify({email,password}),
@@ -49,19 +18,31 @@ function Login (){
       }
     })
     result= await result.json();
-    navigate('/Chat')
+    console.log(result)
+    if(result.token){
+localStorage.setItem('user',JSON.stringify(result.user))
+localStorage.setItem('token',JSON.stringify(result.token))
+localStorage.setItem('id',JSON.stringify(result.user[0].id))
+console.log(result)
+
+navigate('/Chat')
+    }else{
+      alert("please enter correct details")
+    }
+   
   }
 const [email, setEmail] = useState("")
 const [password, setPassword] = useState("")
 
-
   return(
 <div className="login">
 <label className='label'>email</label>
+
 <input className='inputBox' type="text" placeholder='enter email' value={email} onChange={(e)=>setEmail(e.target.value)}/> <br/> <br/>
+{error && !email &&<> <span>Enter Valid Email</span><br /></>}
 <label className='label'>password </label>
 <input className="inputBox" type ="password" placeholder="enter PAssword" value={password} onChange={(e)=>setPassword(e.target.value)}/> <br/><br/>
-
+{ error && !password&&  <><span>Enter Valid Password</span><br/></>}
 <button onClick={collect}>login</button>
 </div>
   )
