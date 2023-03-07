@@ -25,7 +25,7 @@ localStorage.setItem('token',JSON.stringify(result.token))
 localStorage.setItem('id',JSON.stringify(result.user[0].id))
 console.log(result)
 
-navigate('/Chat')
+navigate('/Chatting')
     }else{
       alert("please enter correct details")
     }

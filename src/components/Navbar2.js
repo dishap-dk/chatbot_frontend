@@ -9,13 +9,16 @@ function NavBar2() {
       let res = await fetch("http://localhost:8080/getUser");
       res = await res.json();
       setresult(res.data);
+      
     };
     getUsers();
   }, []);
   return (
     <div className="nav">
+      <table>
       <ul className="navbar2">
         <h1 className="user">users List</h1>
+       
         <li>id</li>
         <li>name</li>
       </ul>
@@ -27,8 +30,11 @@ function NavBar2() {
               <li>{list.id}</li>
               <li>{list.name}</li>
             </ul>
+            
           );
         })}
+    
+    </table>
     </div>
   );
 }
