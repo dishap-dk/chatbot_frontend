@@ -17,7 +17,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
     <NavBar/>
-    <NavBar2/>
+ 
       <Routes>
         {/* <Route element={<Protected/>}> */}
   

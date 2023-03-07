@@ -6,6 +6,8 @@ function NavBar(){
             <ul className="navbar">
                 <li> <Link to ="/">Register</Link></li>
                 <li><Link to ="/login">login</Link></li>
+             
+                <li><Link to ="/chatting">chatting</Link></li>
                 <li><Link to ="/chat">chat</Link></li>
                 
 

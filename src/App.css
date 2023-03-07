@@ -94,12 +94,24 @@
 .navbar2{
   text-align: left;
 }
-.navbar3{
+/* .navbar3{
   text-align: left;
-}
-.user{
-  text-align: left;
-}
-/* .nav{
-
 } */
+.user{
+  /* text-align: left; */
+  display: flex;
+}
+.nav{
+  text-align: left;
+  margin-top: 50px;
+}
+.nav ul li {
+  display: inline-block;
+  border: 1px solid skyblue;
+   padding: 5px;
+  width: 100px; 
+  text-align: center;
+}
+.nav ul{
+  margin: 0;
+}
