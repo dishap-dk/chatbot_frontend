@@ -21,12 +21,13 @@ function NavBar2() {
   try{
 
 let name =(e.target.textContent)
-let res = await fetch (`http://localhost:8080/getIdByName?name='${name}'`)
+let res = await fetch (`http://localhost:8080/getIdByName/${name}`)
 res= await res.json();
-console.log(res);
+console.log(res.data[0].id);
 setName(res.data)
-}catch(err){
-    console.log(err.message)
+localStorage.setItem('receiverId',JSON.stringify(res.data[0].id))
+}catch(error){
+    console.error(error);
   }
   };
   return (
