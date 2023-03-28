@@ -10,6 +10,7 @@ function NavBar2() {
     const getUsers = async () => {
       let res = await fetch("http://localhost:8080/getUser");
       res = await res.json();
+      // console.log(res)
       setresult(res.data);
       
 
@@ -21,8 +22,13 @@ function NavBar2() {
   try{
 
 let name =(e.target.textContent)
+console.log(name)
+// console.log(name)
 let res = await fetch (`http://localhost:8080/getIdByName/${name}`)
+
 res= await res.json();
+console.log("data:",res)
+
 console.log(res.data[0].id);
 setName(res.data)
 localStorage.setItem('receiverId',JSON.stringify(res.data[0].id))

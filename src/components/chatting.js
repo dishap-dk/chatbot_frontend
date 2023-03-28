@@ -1,48 +1,39 @@
-
-
 // export default Chatting;
 import React, { useState, useEffect } from "react";
 import NavBar2 from "./Navbar2";
-import "../App.css"
+import "../App.css";
 
 function Chatting() {
   const userId = JSON.parse(localStorage.getItem("id"));
-  const receiverId = JSON.parse(localStorage.getItem("receiverId"))
+  const receiverId = JSON.parse(localStorage.getItem("receiverId"));
   const [receiver, setReceiver] = useState("");
   const [content, setContent] = useState("");
   const [messages, setMessages] = useState([]);
-  const [fetchMsg,setfetchMsg]= useState([])
+  const [fetchMsg, setfetchMsg] = useState([]);
+  const [id, setId] = useState("");
 
   useEffect(() => {
-    // Fetch the list of sent messages when the component mounts
     fetchSentMessages();
-//  const interValId = setInterval(() => {
+    const intervalId = setInterval(() => {
+      fetchReceivedMessages()
+        .then((setfetchMsg) => {
+          setfetchMsg(fetchMsg);
+        })
+        .catch((error) => {
+          console.error("Error fetching received messages:", error);
+        });
+    }, 100000);
+    fetchReceivedMessages();
 
-
-const intervalId = setInterval(() => {
-  fetchReceivedMessages()
-    .then((msgs) => {
-      // console.log(msgs)
-      setfetchMsg(msgs.data);
-    })
-    .catch((error) => {
-      console.error("Error fetching received messages:", error);
-    });
-}, 10000);
-  fetchReceivedMessages();
-//  }, 100000);
-
-// return()=>clearInterval(interValId)
-
-return () => clearInterval(intervalId);
-}, []);
+    return () => clearInterval(intervalId);
+  }, []);
   const handleSubmit = async () => {
     const messageData = {
       sender: userId,
       receiver: receiverId,
       content,
-    };
-
+    }
+    
     try {
       const result = await fetch("http://localhost:8080/chat", {
         method: "POST",
@@ -55,8 +46,8 @@ return () => clearInterval(intervalId);
       console.log(responseData);
 
       // Add the new message to the list of sent messages
-      setMessages([...messages, messageData]);
-      setfetchMsg([...fetchMsg,messageData])
+      // setMessages([...messages, messageData]);
+      // setfetchMsg([...fetchMsg, messageData]);
 
       // Clear the form inputs after submitting the message
       setReceiver("");
@@ -67,78 +58,112 @@ return () => clearInterval(intervalId);
   };
 
   const fetchSentMessages = async () => {
+    let content = {
+      senderId: userId,
+      receiverId: receiverId,
+    };
     try {
-      const result = await fetch(`http://localhost:8080/getUserMsg?sender=${userId}`);
+      const result = await fetch(`http://localhost:8080/fetchSentmsg`, {
+        method: "Post",
+        body: JSON.stringify(content),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(userId);
+      console.log(receiverId);
       const responseData = await result.json();
-      setMessages(responseData);
-      console.log(responseData)
+
+      setMessages(responseData.data);
+      console.log(responseData);
     } catch (error) {
       console.error(error);
     }
   };
-  const fetchReceivedMessages=async()=>{
-    try{
-      const result = await fetch(`http://localhost:8080/fetchMsg/${receiverId}`);
+  const fetchReceivedMessages = async () => {
+    let content = {
+      senderId: receiverId,
+      receiverId: userId,
+    };
+    try {
+      const result = await fetch(`http://localhost:8080/fetchSentmsg`, {
+        method: "Post",
+        body: JSON.stringify(content),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(receiverId);
+      console.log(userId);
       const responseData = await result.json();
-      setfetchMsg(responseData);
-      console.log(responseData)
-    }catch (error) {
+      setfetchMsg(responseData.data);
+      console.log(responseData);
+    } catch (error) {
       console.error(error);
     }
-    // setTimeout(fetchReceivedMessages,50000)
-  }
-
+  };
 
   return (
-    <div>
-      <NavBar2/>
-      {/* <label className="label">ReceiverId </label>
-      <input
-        className="inputBox"
-        type="number"
-        placeholder="enter ReceiverId"
-        value={receiver}
-        onChange={(e) => setReceiver()} */}
-      {/* /> */}
-      <br />
-      <br />
-      <label className="label">Content </label>
-      <input
-        className="inputBox"
-        type="text"
-        placeholder="enter Message"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
+    <div
+      style={{
+        backgroundColor: "skyblue",
+        width: "400px",
+        height: "600px",
+        margin: "auto",
+      }}
+    >
+      <div className="Box">
+        <NavBar2 />
 
-      <br />
-      <br />
-      <button onClick={handleSubmit}>Submit</button>
+        <br />
+        <br />
+        <label className="label">Content </label>
+        <input
+          className="inputBox"
+          type="text"
+          placeholder="enter Message"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
 
-      {/* Display the list of sent messages */}
-      <div id="sent-messages" className="div">
-        {messages.map((message) => (
-          <div key={message.id}>
-            {/* <p>Receiver ID: {message.receiverId}</p> */}
-            <p>Message: {message.content}</p>
-          </div>
-        ))}
-      </div>
+        <br />
+        <br />
+        <button
+          onClick={handleSubmit}
+          style={{ float: "right", marginTop: "-37px" }}
+        >
+          Submit
+        </button>
+        <div
+          id="sent-messages"
+          className="div"
+          style={{
+            backgroundColor: "#b3a8c0",
+            width: "250px",
+            height: "300px",
+            marginTop: "-300px",
+            marginLeft: "150px",
+          }}
+        >
+          {messages &&
+            messages.length > 0 &&
+            messages.map((message) => (
+              <div key={message.id}>
+                <p>Me:{message.content}</p>
+              </div>
+            ))}
 
-      <div id="reeceived">
-    { Array.isArray(fetchMsg) && fetchMsg.map((Msg)=>(
-          <div key={Msg.id}>
-            <p>receivedmessage:{Msg.content}</p>
-            </div>
-        ))}
+          {fetchMsg &&
+            fetchMsg.length > 0 &&
+            fetchMsg.map((Msg) => (
+              <div key={Msg.id}>
+                <p>receivedmessage:{Msg.content}</p>
+              </div>
+            ))}
+        </div>
       </div>
     </div>
   );
 }
 
- export default Chatting;
-
-
-
-
-
+export default Chatting;
