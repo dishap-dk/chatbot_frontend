@@ -10,10 +10,20 @@ function Chatting() {
   const [content, setContent] = useState("");
   const [messages, setMessages] = useState([]);
   const [fetchMsg, setfetchMsg] = useState([]);
-  const [id, setId] = useState("");
+  // const [id, setId] = useState("");
 
   useEffect(() => {
-    fetchSentMessages();
+  
+const fetchSent= setInterval(()=>{
+  fetchSentMessages()
+  .then ((setMessages)=>{
+    setMessages(messages)
+  })
+  .catch((error)=>{
+    console.error("Error fetching sent messages:", error);
+  })
+},100000)
+
     const intervalId = setInterval(() => {
       fetchReceivedMessages()
         .then((setfetchMsg) => {
@@ -24,8 +34,11 @@ function Chatting() {
         });
     }, 100000);
     fetchReceivedMessages();
+    fetchSent()
 
-    return () => clearInterval(intervalId);
+    return () => {clearInterval(intervalId);
+    return () => clearInterval(fetchSent);
+    }
   }, []);
   const handleSubmit = async () => {
     const messageData = {
@@ -33,7 +46,7 @@ function Chatting() {
       receiver: receiverId,
       content,
     }
-    
+
     try {
       const result = await fetch("http://localhost:8080/chat", {
         method: "POST",
